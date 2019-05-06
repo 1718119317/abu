@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #box{
+            width: 500px;
+            height: 500px;
+            border: 10px solid #000;
+            margin: 50px auto;
+        }
+        #d1,#d2{
+            width: 200px;
+            height: 200px;
+            background: red;
+            float: left;
+        }
+        #d1{
+            /*float: left;*/
+            /*height: 300px;*/
+        }
+        #d2{
+            background: green;
+            /*height: 300px;*/
+        }
+        #d3{
+            width: 200px;
+            height: 300px;
+            background: blue;
+            float: left;
+        }
+        h1{
+            border: 1px solid pink;
+        }
+        h2,span{
+            float: left;
+            border: 1px solid orange;
+            margin: 0 0;
+        }
+    </style>
+</head>
+<body>
+<div id="box">
+
+    <div id="d1"></div>
+    <!--*1. 浮动元素从它在文档中的原始位置脱离文档流，“漂浮”在父元素的上方，按照浮动方向依次停靠在其他元素的边缘，如果父元素尺寸不够，会自动换行显示-->
+			<!--*2. 浮动元素脱流，在文档中不占位，导致后面正常元素向前占位，并且影响父元素的高度-->
+			<!--3. 自带“文字环绕”效果，常用于图文混排，设置图片浮动，后面正常的文本元素会向前占位，文本内容会围绕浮动元素显示-->
+				<!--练习：创建父元素（500*500），添加图片和文本标签，设置图片浮动-->
+			<!--4. 单个浮动元素与行内元素共行显示，类似文字环绕效果-->
+			<!--*5. 元素设置浮动，就可以设置宽高-->
+    <div id="d2"></div>
+    <div id="d3"></div>
+</div>
+<h1>哈哈</h1>
+<h2>呵呵</h2>
+<span>嘿嘿</span>
+</body>
+</html>
