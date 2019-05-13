@@ -1,7 +1,7 @@
 import tkinter
 
-from home_window import Friends
-from user_register import Register
+from client.home_window import Friends
+from client.user_register import Register
 
 
 class Login():
@@ -39,6 +39,10 @@ class Login():
         self.root.mainloop()
 
     def do_login(self):
+        name=self.uname.get()
+        passwd=self.upasswd.get()
+        msg='L '+name+' '+passwd
+
         print(self.uname.get(),self.upasswd.get())
         self.root.destroy()
         home = Friends(self.uname)
