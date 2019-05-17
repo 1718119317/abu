@@ -1,14 +1,20 @@
 from client.config import *
 
 from socket import *
+
 ADDR=(HOST,PORT)
+sockfd=socket()
+sockfd.connect(ADDR)
+
 class ClientSocket():
     def __init__(self):
-        self.create_socket()
-        self.connect()
+        self.sockfd=sockfd
+        #设置全局变量,登陆后再赋值
+        self.myuname=None
 
-    def create_socket(self):
-        self.sockfd=socket()
+
+    # def create_socket(self):
+    #     self.sockfd=socket()
         # self.sockfd.setsockopt(SOL_SOCKET,SO_REUSEADDR,DEBUG)
 
     # def bind(self):
@@ -17,5 +23,9 @@ class ClientSocket():
     #     self.ip = self.address[0]
     #     self.port = self.address[1]
 
-    def connect(self):
-        self.connect(ADDR)
+    # def connect(self):
+    #     self.sockfd.connect(ADDR)
+
+
+if __name__ == '__main__':
+    s=ClientSocket()

@@ -1,9 +1,12 @@
 import tkinter
+from client.client_socket import ClientSocket
 
-class UserInfo():
+class UserInfo(ClientSocket):
     def __init__(self,name):
+        super().__init__()
         self.uname=name
         self.root=tkinter.Tk()
+        self.show()
 
     def get_info_by_name(self):
 

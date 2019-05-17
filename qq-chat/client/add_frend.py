@@ -1,8 +1,13 @@
 import tkinter
 from tkinter import ttk
+from client.client_socket import ClientSocket
+from tkinter.messagebox import *
+
 # from PIL import Image,ImageTk
-class AddFrend():
-    def __init__(self):
+class AddFrend(ClientSocket):
+    def __init__(self,uname):
+        super().__init__()
+        self.uname = uname
         self.root=tkinter.Tk()
     
     def show(self):
@@ -30,6 +35,16 @@ class AddFrend():
 
         root.mainloop()
 
+    def send_friend_request(self):
+        user_uname="zhang"
+        msg = 'A ' + self.uname + ' ' + user_uname+" 我是XXX,想添加你为好友!"
+        self.sockfd.send(msg.encode())
+        data = self.sockfd.recv(1024).decode()
+        if data == "OK":
+            showinfo("添加好友成功!!!")
+        else:
+            showinfo(data)
+
     def search_by_name(self,event):
         res = ["张三", "李四"]
         for item in res:
@@ -37,5 +52,5 @@ class AddFrend():
         print(res)
 
 if __name__ == '__main__':
-    add=AddFrend()
+    add=AddFrend("zs")
     add.show()

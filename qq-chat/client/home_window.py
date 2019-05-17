@@ -1,12 +1,15 @@
 import tkinter
 from tkinter import ttk
-from user_infos import UserInfo
-from add_frend import AddFrend
+from client.user_infos import UserInfo
+from client.add_frend import AddFrend
+from client.client_socket import ClientSocket
 # from PIL import Image,ImageTk
-class Friends():
+class Friends(ClientSocket):
     def __init__(self,name):
+        super().__init__()
         self.root=tkinter.Tk()
         self.uname=name
+        self.show()
 
     def show(self):
         root=self.root
@@ -64,7 +67,7 @@ class Friends():
         uinfo=UserInfo(self.uname)
         uinfo.show()
     def add_friend(self,event):
-        adf=AddFrend()
+        adf=AddFrend(self.uname)
         adf.show()
 
     def do_chat(self,event):

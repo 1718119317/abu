@@ -1,12 +1,18 @@
 import tkinter
+import json
+# from client.user_login import Login
+# import client.user_login
+from tkinter.messagebox import *
+# from client.home_window import Friends
+from client.client_socket import ClientSocket
 
-from home_window import Friends
 
-
-class Register():
+class Register(ClientSocket):
     def __init__(self):
+        super().__init__()
         self.root=tkinter.Tk()
         self.show()
+
     def show(self):
 
         root=self.root
@@ -57,9 +63,29 @@ class Register():
         root.mainloop()
 
     def do_register(self):
-        print("注册成功")
-        home=Friends(self.uname)
-        home.show()
+        dict_uinfo={}
+        dict_uinfo["uname"]=self.uname.get()
+        dict_uinfo["uage"]=self.uage.get()
+        dict_uinfo["usex"]=self.usex.get()
+        dict_uinfo["utel"]=self.utel.get()
+        dict_uinfo["uaddr"]=self.uaddr.get()
+        dict_uinfo["upasswd"]=self.upasswd.get()
+        #将用户信息字典转成字符串发送
+        msg = 'R ' +json.dumps(dict_uinfo)
+        self.sockfd.send(msg.encode())
+        data = self.sockfd.recv(1024).decode()
+        if data == "OK":
+            self.root.destroy()
+
+            from client.user_login import Login
+
+            login = Login(dict_uinfo["uname"])
+
+
+        else:
+            # showinfo("用户名或密码输入错误!!!")
+            showinfo(data)
+
 
     def do_reset(self):
         self.uname.set("")
@@ -72,4 +98,4 @@ class Register():
 
 if __name__ == '__main__':
     reg=Register()
-    reg.show()
+
