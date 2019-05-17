@@ -22,6 +22,7 @@ class ClientServer(ClientSocket):
         login=Login()
         re=Request(login)
         recv_thread=Thread(target=re.request)
+        recv_thread.start()
 
 
 

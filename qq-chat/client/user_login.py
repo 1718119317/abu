@@ -49,32 +49,18 @@ class Login(ClientSocket):
         passwd=self.upasswd.get()
         msg='L '+name+' '+passwd
         self.sockfd.send(msg.encode())
-        data=self.sockfd.recv(1024).decode()
-        if data=="OK":
-            # self.myuname=name #把name赋值给全局变量,方便各个串口
-            self.root.destroy()
-            home = Friends(name)
-            home.show()
-        else:
-            # showinfo("用户名或密码输入错误!!!")
-            showinfo(data)
-
-        # print(self.uname.get(),self.upasswd.get())
-
 
 
     def do_resgister(self):
-
         self.root.destroy()
         reg=Register()
+        print("aaa")
+        self.window_obj_list.append(reg)
 
-        # self.root.quit()
 
 
 
 if __name__ == '__main__':
-
-
-    login=Login()
+    login=Login("zs")
 
 

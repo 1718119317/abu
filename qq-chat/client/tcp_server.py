@@ -28,9 +28,13 @@ while True:
         if not data:
             break
         print("Receive message:",data.decode())
-
-        n = connfd.send(b"OK")
-        print("Send %d bytes"%n)
+        data=data.decode().split(" ")
+        if data[0]=="L":
+            msg="L "+"OK "+"zs"
+        elif data[0]=="R":
+            msg="R "+"OK "+"zs"
+        n = connfd.send(msg.encode())
+        print("Send %d bytes:%s"%(n,msg))
     connfd.close()
 
  # 关套接字
