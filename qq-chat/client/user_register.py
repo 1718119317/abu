@@ -10,6 +10,7 @@ from client.client_socket import ClientSocket
 class Register(ClientSocket):
     def __init__(self):
         super().__init__()
+        # self.window_obj_list.append(self)
         self.root=tkinter.Tk()
         self.show()
 
@@ -73,14 +74,12 @@ class Register(ClientSocket):
         #将用户信息字典转成字符串发送
         msg = 'R ' +json.dumps(dict_uinfo)
         self.sockfd.send(msg.encode())
-        data = self.sockfd.recv(1024).decode()
-        if data == "OK":
+        data = self.sockfd.recv(128).decode().split()
+        if data[1] == "OK":
             self.root.destroy()
-
             from client.user_login import Login
-
-            login = Login(dict_uinfo["uname"])
-
+            myuname = data[2]
+            Login(myuname)
 
         else:
             # showinfo("用户名或密码输入错误!!!")

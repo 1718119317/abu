@@ -12,6 +12,7 @@ class Login(ClientSocket):
         # 设置tkinter窗口
         super().__init__()
         self.save_uname=uname
+        # self.window_obj_list.append(self)
         self.root = tkinter.Tk()
         self.show()
 
@@ -49,18 +50,25 @@ class Login(ClientSocket):
         passwd=self.upasswd.get()
         msg='L '+name+' '+passwd
         self.sockfd.send(msg.encode())
-
+        data=self.sockfd.recv(128).decode().split()
+        if data[1]=="OK":
+            self.root.destroy()
+            myuname=data[2]
+            friend_list=data[3:]
+            home = Friends(myuname,friend_list)
+            home.show()
 
     def do_resgister(self):
         self.root.destroy()
-        reg=Register()
-        print("aaa")
-        self.window_obj_list.append(reg)
+        Register()
+
+
+
 
 
 
 
 if __name__ == '__main__':
-    login=Login("zs")
+    login=Login()
 
 

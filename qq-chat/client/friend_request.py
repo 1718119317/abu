@@ -12,19 +12,20 @@ from tkinter.messagebox import *
 
 
 class FriendRequest(ClientSocket):
-    def __init__(self,uname,request_msg):
+    def __init__(self,data):
 
         # 设置tkinter窗口
         super().__init__()
-        self.uname = uname
+        self.myuname = data[1]
         self.root = tkinter.Tk()
-        self.request_msg =request_msg # 元祖,包含用户名和请求信息
+        self.uname=data[2]
+        self.request_msg =data[3] # 元祖,包含用户名和请求信息
         self.show()
 
     def show(self):
 
         # 绘制label,grid（）确定行列
-        self.user_uname=tkinter.Label(self.root, text=self.request_msg[0])
+        self.user_uname=tkinter.Label(self.root, text=self.uname)
         self.user_uname.bind("<Button-1>",self.show_user_info)
         self.user_uname.grid(row=0)
 
@@ -32,7 +33,7 @@ class FriendRequest(ClientSocket):
 
         # 导入两个输入框
         self.e1 = tkinter.Text(self.root)
-        self.e1.insert(tkinter.INSERT, self.request_msg[1])
+        self.e1.insert(tkinter.INSERT, self.request_msg)
 
         # 设置输入框的位置
         self.e1.grid(row=1, sticky=tkinter.W, padx=10, pady=5)
@@ -51,22 +52,23 @@ class FriendRequest(ClientSocket):
         self.root.mainloop()
 
     def agree_friend_request(self):
-        msg = 'A ' + self.uname + ' ' + self.request_msg[0]
+        msg = 'FRR ' +"OK "+ self.myuname + ' ' +self.uname+" "+ self.request_msg
         self.sockfd.send(msg.encode())
-        data = self.sockfd.recv(1024).decode()
-        if data == "OK":
-            showinfo("添加好友成功!!!")
-        else:
-            showinfo(data)
-        self.root.destroy()
+        # data = self.sockfd.recv(1024).decode()
+        # if data == "OK":
+        #     showinfo("添加好友成功!!!")
+        # else:
+        #     showinfo(data)
+        # self.root.destroy()
 
     def refuse_friend_request(self):
         refuse_msg=self.e1.get("0.0","end")
-        msg = 'Re ' + self.uname + ' '+self.request_msg[0]+ ' '+refuse_msg
+        msg = 'FRR ' +"NO "+ self.myuname + ' '+self.uname+ ' '+refuse_msg
         self.sockfd.send(msg.encode())
 
     def show_user_info(self,event):
-        uinfo=UserInfo(self.request_msg[0])
+        msg = 'UI ' + self.myuname+" "+self.uname
+        self.sockfd.send(msg.encode())
 
 if __name__ == '__main__':
     msg=("zs","我是张三")

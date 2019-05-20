@@ -5,11 +5,13 @@ from socket import *
 ADDR=(HOST,PORT)
 sockfd=socket()
 sockfd.connect(ADDR)
+sockfd_udp=socket(AF_INET,SOCK_DGRAM)
 window_obj_list=[]
 
 class ClientSocket():
     def __init__(self):
         self.sockfd=sockfd
+        self.sockfd_udp=sockfd_udp
         #设置全局变量,登陆后再赋值
         self.window_obj_list=window_obj_list
 
