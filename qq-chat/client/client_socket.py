@@ -1,5 +1,8 @@
-from client.config import *
+"""
+    套接字基类
+"""
 
+from client.config import *
 from socket import *
 
 ADDR=(HOST,PORT)
@@ -10,24 +13,18 @@ window_obj_list=[]
 
 class ClientSocket():
     def __init__(self):
+
+        #tcp套接字用于向服务端发送信息
         self.sockfd=sockfd
+
+        #创建udp套接字用于接收服务端发来的信息
         self.sockfd_udp=sockfd_udp
-        #设置全局变量,登陆后再赋值
+
+        #设置全局变量,登陆后再赋值,把窗口对象添加到列表里
         self.window_obj_list=window_obj_list
 
 
-    # def create_socket(self):
-    #     self.sockfd=socket()
-        # self.sockfd.setsockopt(SOL_SOCKET,SO_REUSEADDR,DEBUG)
 
-    # def bind(self):
-    #     self.address=(gethostname(),5000)
-    #     self.bind(self.address)
-    #     self.ip = self.address[0]
-    #     self.port = self.address[1]
-
-    # def connect(self):
-    #     self.sockfd.connect(ADDR)
 
 
 if __name__ == '__main__':

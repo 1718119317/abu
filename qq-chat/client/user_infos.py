@@ -1,3 +1,7 @@
+"""
+    显示用户信息窗口
+"""
+
 import tkinter
 from client.client_socket import ClientSocket
 
@@ -5,14 +9,9 @@ class UserInfo(ClientSocket):
     def __init__(self,dict_uinfo):
         super().__init__()
         self.dict_uinfo=dict_uinfo
-        self.window_obj_list.append(self)
+        # self.window_obj_list.append(self)
         self.root=tkinter.Tk()
         self.show()
-
-    # def get_info_by_name(self):
-    #
-    #     uinfo={"uname":"zs"}
-    #     return uinfo
 
     def show(self):
         root=self.root

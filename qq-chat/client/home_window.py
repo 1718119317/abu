@@ -5,6 +5,8 @@ from client.add_frend import AddFrend
 from client.client_socket import ClientSocket
 from threading import Thread
 from client.handle_response import Response
+from client.chat_frame import ChatFrame
+import os
 
 # from PIL import Image,ImageTk
 class Friends(ClientSocket):
@@ -12,9 +14,10 @@ class Friends(ClientSocket):
         super().__init__()
         self.root=tkinter.Tk()
         #初始话时的好友列表
+        self.window_obj_list.append(self)
         self.friendlist=friendlist
         self.uname=name
-        self.show()
+        # self.show()
 
     def show(self):
         root=self.root
@@ -62,36 +65,54 @@ class Friends(ClientSocket):
         self.tree1.bind("<Double-Button-1>",self.do_chat)
         handle_resp = Response()
         self.sockfd_udp.bind(self.sockfd.getsockname())
+
         recv_thread = Thread(target=handle_resp.handle_response)
         recv_thread.start()
+        # 关闭窗口时执行事件
+        self.root.protocol("WM_DELETE_WINDOW", self.close_window)
+        # self.refresh_friendlist(self.friendlist)
         root.mainloop()
 
+    #刷新好友列表
     def refresh_friendlist(self,friendlist):
-        for item in self.treeF1.get_children():
-            self.treeF1.delete(item)
+        child_nodes=self.tree1.get_children(self.treeF1)
+        print(child_nodes)
+        for item in child_nodes:
+            self.tree1.delete(item)
         for i in range(len(friendlist)):
             self.tree1.insert(self.treeF1, i, "", text=friendlist[i])
 
-
-
-    # def get_my_friends(self):
-    #     fres = ["张三", "李四"]
-    #     return fres
-
+    #显示个人信息
     def show_user_info(self,event):
         msg = 'UI ' + self.uname+" "+self.uname
         self.sockfd.send(msg.encode())
+
+    #添加好友
     def add_friend(self,event):
         adf=AddFrend(self.uname)
         adf.show()
 
+    #创建好友聊天窗口
     def do_chat(self,event):
+        # print(self.tree1.item(self.tree1.focus())['text'])
+        friend_uname=self.tree1.item(self.tree1.focus())['text']
+        chat=ChatFrame(self.uname,friend_uname)
+        chat.show1()
 
-        print(self.tree1.item(self.tree1.focus())['text'])
+    def close_window(self):
+        msg="E "+self.uname
+        self.sockfd.send(msg.encode())
+        self.root.destroy()
+        os._exit(0)
 
-        # print("chat")
+
+
+
+
 
 if __name__ == '__main__':
     fres_list=["zhang","赵敏","周芷若"]
     fre=Friends("zs",fres_list)
     fre.show()
+    fres_list1 = ["zhang", "赵敏", "周芷若","小昭"]
+    fre.refresh_friendlist(fres_list1)

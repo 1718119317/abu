@@ -1,4 +1,6 @@
-
+"""
+    接收服务端发来的信息并处理
+"""
 
 from client.client_socket import ClientSocket
 from threading import Thread
@@ -7,15 +9,12 @@ from tkinter.messagebox import *
 from client.user_infos import UserInfo
 import json
 from tkinter.messagebox import *
+from client.chat_frame import ChatFrame
 
 class Response(ClientSocket):
 
-
     def __init__(self):
         super().__init__()
-        # self.window_obj=window_obj
-
-
 
     def handle_response(self):
         while True:
@@ -32,7 +31,23 @@ class Response(ClientSocket):
                 self.do_friend_request(data)
             elif msg_type=="FRR":
                 self.do_friend_request_result(data)
+            elif msg_type == "C":
+                self.do_chat(data)
 
+    #处理聊天信息
+    def do_chat(self,data):
+        friend_chat=self.__find_chat_window(data[2])
+        # print(friend_chat,self.window_obj_list)
+        if friend_chat:
+            friend_chat.show_msg(data)
+        else:
+            def chat(data):
+                friend_chat=ChatFrame(data[1], data[2])
+                friend_chat.show1(data)
+            chat=Thread(target=chat,args=(data,))
+            chat.start()
+
+    #处理拒绝添加好友信息
     def do_friend_request_result(self,data):
         if data[1]=="OK":
             showinfo(data[2])
@@ -40,6 +55,7 @@ class Response(ClientSocket):
         else:
             showinfo(data[2])
 
+    #处理添加好友请求信息
     def do_friend_request(self,data):
         from client.friend_request import FriendRequest
         fr=FriendRequest(data)
@@ -53,7 +69,7 @@ class Response(ClientSocket):
 
     #显示查询用户结果
     def do_search_user(self,data):
-        res=data[2:]
+        # res=data[2:]
         print(self.window_obj_list,self.window_obj_list[0].root.title())
         af=self.__find_chat_window("add_friend")
         af.show_search(data[2:])
@@ -61,8 +77,6 @@ class Response(ClientSocket):
 
     #显示个人信息结果
     def show_user_info(self,data):
-        # uname=data[1]
-        # print(data[2],len(data))
         str="".join(data[2:])
         dict_uinfo=json.loads(str)
         UserInfo(dict_uinfo)

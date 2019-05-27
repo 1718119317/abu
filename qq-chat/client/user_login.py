@@ -27,25 +27,50 @@ class Login(ClientSocket):
 
         self.upasswd=tkinter.StringVar()
         #导入两个输入框
-        e1 = tkinter.Entry(self.root,textvariable=self.uname)
-        e2 = tkinter.Entry(self.root,textvariable=self.upasswd)
+        self.e1 = tkinter.Entry(self.root,textvariable=self.uname)
+        self.e2 = tkinter.Entry(self.root,textvariable=self.upasswd)
 
         #设置输入框的位置
-        e1.grid(row =0 ,column =1,sticky =tkinter.W, padx=10,pady =5)
-        e2.grid(row =1 ,column =1,sticky =tkinter.W, padx=10,pady =5)
+        self.e1.grid(row =0 ,column =1,sticky =tkinter.W, padx=10,pady =5)
+        self.e2.grid(row =1 ,column =1,sticky =tkinter.W, padx=10,pady =5)
 
 
         #设置两个按钮，点击按钮执行命令 command= 命令函数
         theButton1 = tkinter.Button(self.root, text ="登录", width =10,command =self.do_login)
+
+        theButton1.bind('<Return>', self.do_login1)
+        self.root.bind('<Return>', self.do_login1)
+
         theButton2 = tkinter.Button(self.root, text ="注册",width =10,command =self.do_resgister)
 
         #设置按钮的位置行列及大小
         theButton1.grid(row =3 ,column =0,sticky =tkinter.W, padx=10,pady =5)
         theButton2.grid(row =3 ,column =1,sticky =tkinter.E, padx=10,pady =5)
         self.uname.set(self.save_uname)
+        # 关闭窗口时执行事件
+        self.root.protocol("WM_DELETE_WINDOW", self.close_window)
         self.root.mainloop()
 
     def do_login(self):
+        name=self.uname.get()
+        passwd=self.upasswd.get()
+        print(name,passwd)
+        if name and passwd:
+            msg='L '+name+' '+passwd
+            self.sockfd.send(msg.encode())
+        else:
+            showwarning("用户名或密码不能为空!")
+            return None
+
+        data=self.sockfd.recv(128).decode().split()
+        if data[1]=="OK":
+            self.root.destroy()
+            myuname=data[2]
+            friend_list=data[3:]
+            home = Friends(myuname,friend_list)
+            home.show()
+
+    def do_login1(self,event):
         name=self.uname.get()
         passwd=self.upasswd.get()
         msg='L '+name+' '+passwd
@@ -62,6 +87,11 @@ class Login(ClientSocket):
         self.root.destroy()
         Register()
 
+    def close_window(self):
+        msg="E "+self.uname
+        self.sockfd.send(msg.encode())
+        self.root.destroy()
+        os._exit(0)
 
 
 

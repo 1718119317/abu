@@ -19,11 +19,11 @@ class FriendRequest(ClientSocket):
         self.myuname = data[1]
         self.root = tkinter.Tk()
         self.uname=data[2]
-        self.request_msg =data[3] # 元祖,包含用户名和请求信息
+        self.request_msg =data[3]
         self.show()
 
     def show(self):
-
+        # self.root.geometry("300x300+500+400")
         # 绘制label,grid（）确定行列
         self.user_uname=tkinter.Label(self.root, text=self.uname)
         self.user_uname.bind("<Button-1>",self.show_user_info)
@@ -51,25 +51,24 @@ class FriendRequest(ClientSocket):
 
         self.root.mainloop()
 
+
     def agree_friend_request(self):
         msg = 'FRR ' +"OK "+ self.myuname + ' ' +self.uname+" "+ self.request_msg
         self.sockfd.send(msg.encode())
-        # data = self.sockfd.recv(1024).decode()
-        # if data == "OK":
-        #     showinfo("添加好友成功!!!")
-        # else:
-        #     showinfo(data)
-        # self.root.destroy()
+        self.root.destroy()
+
 
     def refuse_friend_request(self):
         refuse_msg=self.e1.get("0.0","end")
         msg = 'FRR ' +"NO "+ self.myuname + ' '+self.uname+ ' '+refuse_msg
         self.sockfd.send(msg.encode())
+        self.root.destroy()
 
+    #显示个人用户信息
     def show_user_info(self,event):
         msg = 'UI ' + self.myuname+" "+self.uname
         self.sockfd.send(msg.encode())
 
 if __name__ == '__main__':
-    msg=("zs","我是张三")
-    addfre=FriendRequest("ls",msg)
+    msg=["FR","w","zs","我是张三"]
+    addfre=FriendRequest(msg)

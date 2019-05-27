@@ -1,13 +1,15 @@
 #　tcp_server.py  重要
 
-import socket 
+import socket
+from models import StudentModel
+
 
 #　TCP创建套接字
 sockfd = socket.socket(socket.AF_INET,\
     socket.SOCK_STREAM)
 
 #　绑定地址
-sockfd.bind(('127.0.0.1',5000))
+sockfd.bind(('127.0.0.1',8886))
 
 #　设置监听
 sockfd.listen(3)
@@ -27,14 +29,14 @@ while True:
         data = connfd.recv(1024)
         if not data:
             break
-        print("Receive message:",data.decode())
-        data=data.decode().split(" ")
-        if data[0]=="L":
-            msg="L "+"OK "+"zs"
-        elif data[0]=="R":
-            msg="R "+"OK "+"zs"
-        n = connfd.send(msg.encode())
-        print("Send %d bytes:%s"%(n,msg))
+        data=data.decode
+        print("Receive message:",data)
+
+        print(type(data))
+        print(data.id,data.name,data.age)
+
+        n = connfd.send(b"Receive your message")
+        print("Send %d bytes"%n)
     connfd.close()
 
  # 关套接字

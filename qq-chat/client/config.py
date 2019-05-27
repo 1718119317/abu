@@ -1,7 +1,7 @@
 # client server 相关配置
 
 HOST='0.0.0.0'
-PORT=5000
+PORT=8000
 
 #[debug] true为调试模式
 DEBUG=True

@@ -1,8 +1,12 @@
-import tkinter
-from tkinter import ttk
-from client.client_socket import ClientSocket
-from tkinter.messagebox import *
+"""
+    搜索好友并添加好友窗口
+"""
 
+
+import tkinter
+from client.client_socket import ClientSocket
+
+# from tkinter.messagebox import *
 # from PIL import Image,ImageTk
 class AddFrend(ClientSocket):
     def __init__(self,uname):
@@ -33,13 +37,20 @@ class AddFrend(ClientSocket):
 
         global listbox_show
         listbox_show=tkinter.Listbox(frm)
+        listbox_show.bind("<Double-Button-1>",self.send_friend_request)
         listbox_show.pack()
+
+        # 关闭窗口时执行事件
+        self.root.protocol("WM_DELETE_WINDOW", self.close_window)
         root.mainloop()
 
     #发送好友请求
-    def send_friend_request(self):
-        user_uname="zhang"
-        msg = 'AF ' + self.uname + ' ' + user_uname+" 我是XXX,想添加你为好友!"
+    def send_friend_request(self,event):
+        index=listbox_show.curselection()
+        print(index)
+        user_uname =listbox_show.get(index)
+        print(user_uname)
+        msg = 'FR ' + self.uname + ' ' + user_uname+" 我是%s,想添加你为好友!"%(self.uname)
         self.sockfd.send(msg.encode())
 
     #发送要搜索的用户名
@@ -51,9 +62,12 @@ class AddFrend(ClientSocket):
     #显示好友搜索的结果,handle_response调用
     def show_search(self,res):
         for item in res:
-            tkinter.Label(listbox_show, text=item).pack()
+            listbox_show.insert(tkinter.END,item)
 
-
+    def close_window(self):
+        self.window_obj_list.remove(self)
+        self.root.destroy()
+        # print(self.window_obj_list)
 
 if __name__ == '__main__':
     add=AddFrend("zs")
